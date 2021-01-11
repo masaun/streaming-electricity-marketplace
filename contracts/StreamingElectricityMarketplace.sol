@@ -1,5 +1,7 @@
 pragma solidity ^0.5.16;
 
+import "./ElectricityPriceOracle.sol";
+
 
 /**
  * @notice - This is the StreamingElectricityMarketplace contract for M2M supscription payment of electricity.
@@ -14,6 +16,10 @@ contract StreamingElectricityMarketplace {
     }
     Device[] devices;
 
-    constructor() public {}
+    ElectricityPriceOracle public electricityPriceOracle;
+
+    constructor(ElectricityPriceOracle _electricityPriceOracle) public {
+        electricityPriceOracle = _electricityPriceOracle;
+    }
 
 }
