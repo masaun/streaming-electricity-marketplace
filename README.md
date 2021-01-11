@@ -64,7 +64,8 @@ $ npm run test
   - Doc（Data Union）：https://streamr.network/docs/data-unions/intro-to-data-unions
   - Devpost（Hacker Guide）：https://oceandec.devpost.com/details/hackerguide
   - Slide：https://docs.google.com/presentation/d/1QjBD3s-2fS-CrETtPAHrSR4PuFFSRFvvimJOCQbmvGI/edit#slide=id.g875ff90d1f_0_0
-  
+  - Streamr Data Challenge 2021：https://www.streamrdatachallenge.com
+
 <br>
 
 - Truffle test
