@@ -38,14 +38,17 @@ contract StreamingElectricityMarketplace {
         MARKETPLACE = address(_marketplace);
     }
 
-
+    /// [Attention]: This smart contract does delegate execution on behalf of msg.sender
     function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
-        marketplace.createProduct();
+        marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds, false);
     }
 
 
     function buyProduct(bytes32 productId, uint purchaseAmount) public returns (bool) {
         /// [Note]: Should approve the DataTokens in advance
+        dataToken.transferFrom(msg.sender, address(this), purchaseAmount);
+
+        /// [Note]: approve this contract for the Marketplace contract
         dataToken.approve(MARKETPLACE, purchaseAmount);
 
         /// Buy for a product with the DataTokens 
