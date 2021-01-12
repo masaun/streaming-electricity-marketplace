@@ -3,7 +3,7 @@ const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
 /// Artifact of the StreamingElectricityMarketplace contract 
-const StreamingElectricityMarketplace = artifacts.require("OceanFarmingToken");
+const StreamingElectricityMarketplace = artifacts.require("StreamingElectricityMarketplace");
 const ElectricityPriceOracle = artifacts.require("ElectricityPriceOracle");
 const Marketplace = artifacts.require("Marketplace");
 const DataToken = artifacts.require("DataToken");
@@ -13,6 +13,10 @@ let streamingElectricityMarketplace;
 let electricityPriceOracle;
 let marketplace;
 let dataToken;
+
+/// Deployed address (from mainnent): https://github.com/streamr-dev/marketplace-contracts/blob/master/migrations/2_deploy_contracts.js#L6-L10
+const MARKETPLACE = "0xa10151d088f6f2705a05d6c83719e99e079a61c1"
+const DATA_TOKEN = "0x0Cf0Ee63788A0849fE5297F3407f701E122cC023"  /// https://etherscan.io/address/0x0cf0ee63788a0849fe5297f3407f701e122cc023#code
 
 
 /***
@@ -30,7 +34,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         });        
 
         it("Setup Marketplace contract instance", async () => {
-            marketplace = await Marketplace.new({ from: accounts[0] });
+            marketplace = await Marketplace.at(MARKETPLACE, { from: accounts[0] });
         }); 
 
         it("Setup DataToken contract instance", async () => {
