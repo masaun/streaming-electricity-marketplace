@@ -43,7 +43,7 @@ contract StreamingElectricityMarketplace {
     ///------------------------------------------------------------------------------------
 
     function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
-        marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds, false);
+        marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
     }
 
     function buyProduct(bytes32 productId, uint purchaseAmount) public returns (bool) {
