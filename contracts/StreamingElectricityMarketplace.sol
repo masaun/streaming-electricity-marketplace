@@ -61,8 +61,12 @@ contract StreamingElectricityMarketplace {
     /////////////////////
     /// Getter methods
     /////////////////////
-    function getSubscriptionTo(bytes32 productId, address subscriber) public view returns (bool isValid, uint endTimestamp) {
-        return marketplace.getSubscriptionTo(productId, subscriber);
+
+    /**
+     * @notice - this method is in order to get end-timestamp of subscription of caller (msg.sender)
+     */
+    function getSubscriptionTo(bytes32 productId) public view returns (bool isValid, uint endTimestamp) {
+        return marketplace.getSubscriptionTo(productId);
     }
 
 
