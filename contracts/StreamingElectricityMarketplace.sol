@@ -9,6 +9,7 @@ import { ElectricityPriceOracle } from "./ElectricityPriceOracle.sol";
 
 /// Streamr
 import { Marketplace } from "./streamr/Marketplace.sol";  /// [Note]: Include UniswapAdaptor.sol and BancorAdaptor.sol
+import { DataCoin } from "./DataCoin.sol";
 
 
 /**
@@ -26,14 +27,14 @@ contract StreamingElectricityMarketplace {
 
     ElectricityPriceOracle public electricityPriceOracle;
     Marketplace public marketplace;
-    ERC20 public dataToken;
+    DataCoin public dataCoin;
 
     address MARKETPLACE;
 
-    constructor(ElectricityPriceOracle _electricityPriceOracle, Marketplace _marketplace, address _dataToken) public {
+    constructor(ElectricityPriceOracle _electricityPriceOracle, Marketplace _marketplace, DataCoin _dataCoin) public {
         electricityPriceOracle = _electricityPriceOracle;
         marketplace = _marketplace;
-        dataToken = ERC20(_dataToken);
+        dataCoin = _dataCoin;
 
         MARKETPLACE = address(_marketplace);
     }
@@ -48,13 +49,13 @@ contract StreamingElectricityMarketplace {
     }
 
     function buyProduct(bytes32 productId, uint purchaseAmount) public returns (bool) {
-        /// [Note]: Should approve the DataTokens in advance
-        dataToken.transferFrom(msg.sender, address(this), purchaseAmount);
+        /// [Note]: Should approve the DataCoins in advance
+        dataCoin.transferFrom(msg.sender, address(this), purchaseAmount);
 
         /// [Note]: approve this contract for the Marketplace contract
-        dataToken.approve(MARKETPLACE, purchaseAmount);
+        dataCoin.approve(MARKETPLACE, purchaseAmount);
 
-        /// Buy for a product with the DataTokens 
+        /// Buy for a product with the DataCoins 
         marketplace.buy(productId, purchaseAmount);
     }
     
