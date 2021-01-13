@@ -44,10 +44,17 @@ contract StreamingElectricityMarketplace {
     /// [Attention]: This smart contract conduct delegate executions on behalf of msg.sender
     ///------------------------------------------------------------------------------------
 
+    /**
+     * @notice - Launch electricity-based product 
+     * @dev - ProductId = 1:Solar Power, 2:Hydro Power, etc...
+     */
     function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
         marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
     }
 
+    /**
+     * @notice - Buy and start a subscription payment for electricity
+     */
     function buyProduct(bytes32 productId, uint purchaseAmount) public returns (bool) {
         /// [Note]: Should approve the DataCoins in advance
         dataCoin.transferFrom(msg.sender, address(this), purchaseAmount);
