@@ -64,7 +64,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
 
         before(async () => {
             await marketplace.createProduct(productId2, "test", accounts[3], 1, Currency.DATA, 1, { from: accounts[0] })
-            await token.approve(marketplace.address, 1000, { from: accounts[1] })
+            await dataCoin.approve(MARKETPLACE, 1000, { from: accounts[1] })
             await marketplace.buyProduct(productId2, 100, { from: accounts[1] })
         })
 
