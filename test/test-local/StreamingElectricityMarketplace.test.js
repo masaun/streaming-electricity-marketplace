@@ -64,7 +64,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         const testToleranceSeconds = 5
 
         /// product created in 2, subcription bought in 2
-        const productId2 = web3.utils.padLeft(web3.utils.asciiToHex("test_sub2"), 64)        
+        const productId2 = web3.utils.padLeft(web3.utils.asciiToHex("Solar Energy One"), 64)        
         console.log('=== productId2 ===', productId2);
 
         it("Workflow from createProduct to buyProduct", async () => {
