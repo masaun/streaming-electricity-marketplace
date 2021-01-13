@@ -65,6 +65,14 @@ contract StreamingElectricityMarketplace {
         /// Buy for a product with the DataCoins 
         marketplace.buy(productId, purchaseAmount);
     }
+
+    /**
+     * @notice - Grant subscription
+     */
+    function grantSubscription(bytes32 productId, uint subscriptionSeconds, address recipient) public returns (bool) {
+        marketplace.grantSubscription(productId, subscriptionSeconds, recipient);
+    }
+    
     
 
     /////////////////////
