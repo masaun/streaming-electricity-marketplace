@@ -64,17 +64,17 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         const testToleranceSeconds = 5
 
         /// product created in 2, subcription bought in 2
-        const productId2 = web3.utils.padLeft(web3.utils.asciiToHex("Solar Energy One"), 64)        
-        console.log('=== productId2 ===', productId2);
+        const productId = web3.utils.padLeft(web3.utils.asciiToHex("Solar Energy One"), 64)        
+        console.log('=== productId ===', productId);
 
         it("Workflow from createProduct to buyProduct", async () => {
-            await streamingElectricityMarketplace.createProduct(productId2, "test", accounts[3], 1, Currency.DATA, 1, { from: accounts[0] })
+            await streamingElectricityMarketplace.createProduct(productId, "test", accounts[3], 1, Currency.DATA, 1, { from: accounts[0] })
             await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, 1000, { from: accounts[1] })
-            await streamingElectricityMarketplace.buyProduct(productId2, 100, { from: accounts[1] })
+            await streamingElectricityMarketplace.buyProduct(productId, 100, { from: accounts[1] })
         })
 
         it("grant fails for non-owner", async () => {
-            await assertFails(streamingElectricityMarketplace.grantSubscription(productId2, 100, accounts[5], { from: accounts[5] }))
+            await assertFails(streamingElectricityMarketplace.grantSubscription(productId, 100, accounts[5], { from: accounts[5] }))
         })
 
         it("grant works for owner", async () => {
@@ -85,7 +85,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
                 assert(subAfter.isValid)
                 assert(subAfter.endTimestamp - subBefore.endTimestamp > 100 - testToleranceSeconds)
             }
-            await testGrant(productId2)
+            await testGrant(productId)
         })
 
         it("subscription can be extended (when subscrioption period is end and if a user pay)", async () => {
@@ -97,7 +97,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
                 assert(subAfter.isValid)
                 assert(subAfter.endTimestamp - subBefore.endTimestamp > 100 - testToleranceSeconds)
             }
-            await testExtension(productId2)
+            await testExtension(productId)
         })
 
     })
