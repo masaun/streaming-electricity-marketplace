@@ -21,6 +21,9 @@ const DATA_COIN = "0x0Cf0Ee63788A0849fE5297F3407f701E122cC023"  /// https://ethe
 /// Enum
 const { Marketplace: { ProductState, Currency } } = require("../utils/streamr/src/contracts/enums")
 
+/// Test helpers
+const { assertReturnValueEqual, assertEvent, assertEqual, assertFails, assertEventBySignature, now } = require("./streamr/testHelpers")
+
 
 /***
  * @dev - Execution COMMAND: $ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js
