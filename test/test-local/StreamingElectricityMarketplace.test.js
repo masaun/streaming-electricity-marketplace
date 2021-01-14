@@ -81,8 +81,9 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         })
 
         it("buyProduct", async () => {
-            const purchaseAmount = 1000;
+            const pricePerSecond = 1;  /// [Note]: From createProduct() above
             const subscriptionSeconds = 100;
+            let purchaseAmount = web3.utils.toWei(`${ pricePerSecond * subscriptionSeconds }`, 'ether');
             await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, purchaseAmount, { from: accounts[1] })
             await streamingElectricityMarketplace.buyProduct(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
         })
