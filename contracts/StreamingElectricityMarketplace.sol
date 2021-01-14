@@ -49,7 +49,7 @@ contract StreamingElectricityMarketplace {
      * @dev - ProductId = 1:Solar Power, 2:Hydro Power, etc...
      */
     function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
-        dataCoin.approve(MARKETPLACE, 1000);
+        //dataCoin.approve(MARKETPLACE, 1000);
         marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
     }
 
