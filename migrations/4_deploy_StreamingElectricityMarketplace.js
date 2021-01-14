@@ -12,5 +12,6 @@ let currencyUpdateAgentAddress = "0xCC23517BC2CeB8441E5C5ea3160Eaa2E725b305d";  
 let prev_marketplace_address = "0xF83a5EB85302EcFA0103e89dEc2593f607ceDE99";    /// [Note]: Dummy contract address
 
 module.exports = async function(deployer) {
-    await deployer.deploy(StreamingElectricityMarketplace, _electricityPriceOracle, _marketplace, _dataCoin);
+    //await deployer.deploy(StreamingElectricityMarketplace, _electricityPriceOracle, _marketplace, _dataCoin);
+    await deployer.deploy(StreamingElectricityMarketplace, _electricityPriceOracle, _dataCoin, currencyUpdateAgentAddress, prev_marketplace_address);
 };
