@@ -53,7 +53,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
 
         it("Setup StreamingElectricityMarketplace contract instance", async () => {
             const _electricityPriceOracle = electricityPriceOracle.address;
-            const _marketplace = marketplace.address;
+            const _marketplace = MARKETPLACE;
             const _dataCoin = dataCoin.address;
             streamingElectricityMarketplace = await StreamingElectricityMarketplace.new(_electricityPriceOracle,
                                                                                         _marketplace,
@@ -92,9 +92,10 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         })
 
         it("buyProduct", async () => {
-            const pricePerSecond = 1;  /// [Note]: From createProduct() above
+            const pricePerSecond = 1;  /// [Note]: This value from saved-amount when createProduct() above was executed
             const subscriptionSeconds = 100;
-            let purchaseAmount = web3.utils.toWei(`${ pricePerSecond * subscriptionSeconds }`, 'ether');
+            let purchaseAmount = pricePerSecond * subscriptionSeconds;
+            //let purchaseAmount = web3.utils.toWei(`${ pricePerSecond * subscriptionSeconds }`, 'ether');
             await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, purchaseAmount, { from: accounts[1] })
             await streamingElectricityMarketplace.buyProduct(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
         })
