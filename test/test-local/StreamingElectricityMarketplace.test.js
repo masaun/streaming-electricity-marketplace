@@ -31,6 +31,9 @@ const { assertReturnValueEqual, assertEvent, assertEqual, assertFails, assertEve
  **/
 contract("StreamingElectricityMarketplace", function(accounts) {
 
+    /// @dev - Use testIndex in order to avoid duplicated-productId
+    let testIndex = 0;
+
     describe("Setup", () => {
         it("Check all accounts", async () => {
             console.log('=== accounts ===\n', accounts);
@@ -62,9 +65,10 @@ contract("StreamingElectricityMarketplace", function(accounts) {
 
     describe("Subscription", () => {
         const testToleranceSeconds = 5
+        testIndex += 1
 
         /// product created in 2, subcription bought in 2
-        const productId = web3.utils.padLeft(web3.utils.asciiToHex("Solar Energy One"), 64)        
+        const productId = web3.utils.padLeft(web3.utils.asciiToHex(`Energy_Asset_${testIndex}`), 64)        
         console.log('=== productId ===', productId);
 
         it("createProduct", async () => {
