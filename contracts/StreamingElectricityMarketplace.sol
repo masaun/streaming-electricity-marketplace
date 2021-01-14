@@ -15,7 +15,7 @@ import { DataCoin } from "./DataCoin.sol";
 /**
  * @notice - This is the StreamingElectricityMarketplace contract for M2M supscription payment of electricity.
  */
-contract StreamingElectricityMarketplace {
+contract StreamingElectricityMarketplace is Marketplace {
 
     struct Device {  /// [Key]: Array index is currentDeviceId - 1
         address ownerAddress;
@@ -26,17 +26,23 @@ contract StreamingElectricityMarketplace {
     Device[] devices;
 
     ElectricityPriceOracle public electricityPriceOracle;
-    Marketplace public marketplace;
+    //Marketplace public marketplace;
     DataCoin public dataCoin;
 
     address MARKETPLACE;
 
-    constructor(ElectricityPriceOracle _electricityPriceOracle, Marketplace _marketplace, DataCoin _dataCoin) public {
+    //constructor(ElectricityPriceOracle _electricityPriceOracle, Marketplace _marketplace, DataCoin _dataCoin) public {
+    constructor(
+        ElectricityPriceOracle _electricityPriceOracle, 
+        address _dataCoin,
+        address currencyUpdateAgentAddress,
+        address prev_marketplace_address
+    ) public Marketplace(_dataCoin, currencyUpdateAgentAddress, prev_marketplace_address) {
         electricityPriceOracle = _electricityPriceOracle;
-        marketplace = _marketplace;
-        dataCoin = _dataCoin;
+        //marketplace = _marketplace;
+        dataCoin = DataCoin(_dataCoin);
 
-        MARKETPLACE = address(_marketplace);
+        //MARKETPLACE = address(_marketplace);
     }
 
 
@@ -49,8 +55,8 @@ contract StreamingElectricityMarketplace {
      * @dev - ProductId = 1:Solar Power, 2:Hydro Power, etc...
      */
     function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
-        //dataCoin.approve(MARKETPLACE, 1000);
-        marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
+        createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
+        //marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
     }
 
     /**
@@ -63,17 +69,18 @@ contract StreamingElectricityMarketplace {
         /// [Note]: approve this contract for the Marketplace contract
         dataCoin.approve(MARKETPLACE, purchaseAmount);
 
-        /// Buy for a product with the DataCoins 
-        marketplace.buy(productId, subscriptionSeconds);
+        /// Buy for a product with the DataCoins
+        buy(productId, subscriptionSeconds);
+        //marketplace.buy(productId, subscriptionSeconds);
     }
 
     /**
      * @notice - Grant subscription
      */
     function grantSubscription(bytes32 productId, uint subscriptionSeconds, address recipient) public returns (bool) {
-        marketplace.grantSubscription(productId, subscriptionSeconds, recipient);
+        grantSubscription(productId, subscriptionSeconds, recipient);
+        //marketplace.grantSubscription(productId, subscriptionSeconds, recipient);
     }
-    
     
 
     /////////////////////
@@ -84,7 +91,8 @@ contract StreamingElectricityMarketplace {
      * @notice - this method is in order to get end-timestamp of subscription of caller (msg.sender)
      */
     function getSubscriptionTo(bytes32 productId) public view returns (bool isValid, uint endTimestamp) {
-        return marketplace.getSubscriptionTo(productId);
+        return getSubscriptionTo(productId);
+        //return marketplace.getSubscriptionTo(productId);
     }
 
 

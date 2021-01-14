@@ -43,9 +43,9 @@ contract("StreamingElectricityMarketplace", function(accounts) {
             electricityPriceOracle = await ElectricityPriceOracle.new({ from: accounts[0] });
         });        
 
-        it("Setup Marketplace contract instance", async () => {
-            marketplace = await Marketplace.at(MARKETPLACE, { from: accounts[0] });
-        }); 
+        // it("Setup Marketplace contract instance", async () => {
+        //     marketplace = await Marketplace.at(MARKETPLACE, { from: accounts[0] });
+        // }); 
 
         it("Setup DataCoin contract instance", async () => {
             dataCoin = await DataCoin.new({ from: accounts[0] });
@@ -53,11 +53,16 @@ contract("StreamingElectricityMarketplace", function(accounts) {
 
         it("Setup StreamingElectricityMarketplace contract instance", async () => {
             const _electricityPriceOracle = electricityPriceOracle.address;
-            const _marketplace = MARKETPLACE;
+            //const _marketplace = MARKETPLACE;
             const _dataCoin = dataCoin.address;
+            const currencyUpdateAgentAddress = "0xCC23517BC2CeB8441E5C5ea3160Eaa2E725b305d";  /// [Note]: Dummy contract address
+            const prev_marketplace_address = "0xF83a5EB85302EcFA0103e89dEc2593f607ceDE99";    /// [Note]: Dummy contract address
+
             streamingElectricityMarketplace = await StreamingElectricityMarketplace.new(_electricityPriceOracle,
-                                                                                        _marketplace,
+                                                                                        //_marketplace,
                                                                                         _dataCoin,
+                                                                                        currencyUpdateAgentAddress,
+                                                                                        prev_marketplace_address,
                                                                                         { from: accounts[0] });
             STREAMING_ELECTRICITY_MARKETPLACE = streamingElectricityMarketplace.address;
         });
