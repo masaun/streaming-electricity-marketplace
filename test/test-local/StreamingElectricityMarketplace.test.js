@@ -34,7 +34,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
     /// @dev - Use testIndex in order to avoid duplicated-productId
     let testIndex = 0;
 
-    describe("Setup", () => {
+    describe("Setup smart-contracts", () => {
         it("Check all accounts", async () => {
             console.log('=== accounts ===\n', accounts);
         });        
@@ -60,6 +60,14 @@ contract("StreamingElectricityMarketplace", function(accounts) {
                                                                                         _dataCoin,
                                                                                         { from: accounts[0] });
             STREAMING_ELECTRICITY_MARKETPLACE = streamingElectricityMarketplace.address;
+        });
+    });
+
+    describe("Mint the DataCoin", () => {
+        it("1000 DataCoin is minted for buyer (accounts[1])", async () => {
+            const to = accounts[1];
+            const mintAmount = web3.utils.toWei('1000', 'ether');
+            await dataCoin.mint(to, mintAmount, { from: accounts[0] });
         });
     });
 
