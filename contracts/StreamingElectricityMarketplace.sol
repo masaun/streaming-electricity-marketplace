@@ -56,7 +56,7 @@ contract StreamingElectricityMarketplace {
     /**
      * @notice - Buy and start a subscription payment for electricity
      */
-    function buyProduct(bytes32 productId, uint purchaseAmount) public returns (bool) {
+    function buyProduct(bytes32 productId, uint subscriptionSeconds, uint purchaseAmount) public returns (bool) {
         /// [Note]: Should approve the DataCoins in advance
         dataCoin.transferFrom(msg.sender, address(this), purchaseAmount);
 
@@ -64,7 +64,7 @@ contract StreamingElectricityMarketplace {
         dataCoin.approve(MARKETPLACE, purchaseAmount);
 
         /// Buy for a product with the DataCoins 
-        marketplace.buy(productId, purchaseAmount);
+        marketplace.buy(productId, subscriptionSeconds);
     }
 
     /**

@@ -72,8 +72,10 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         })
 
         it("buyProduct", async () => {
-            await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, 1000, { from: accounts[1] })
-            await streamingElectricityMarketplace.buyProduct(productId, 100, { from: accounts[1] })
+            const purchaseAmount = web3.utils.toWei('1000', 'ether');
+            const subscriptionSeconds = web3.utils.toWei('100', 'ether');
+            await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, purchaseAmount, { from: accounts[1] })
+            await streamingElectricityMarketplace.buyProduct(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
         })
 
         it("grant fails for non-owner", async () => {
