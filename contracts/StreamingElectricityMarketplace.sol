@@ -54,7 +54,8 @@ contract StreamingElectricityMarketplace is Marketplace {
      * @notice - Launch electricity-based product 
      * @dev - ProductId = 1:Solar Power, 2:Hydro Power, etc...
      */
-    function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
+    function createElectricity(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
+    //function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
         createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
         //marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
     }
@@ -62,7 +63,7 @@ contract StreamingElectricityMarketplace is Marketplace {
     /**
      * @notice - Buy and start a subscription payment for electricity
      */
-    function buyProduct(bytes32 productId, uint subscriptionSeconds, uint purchaseAmount) public returns (bool) {
+    function buyElectricity(bytes32 productId, uint subscriptionSeconds, uint purchaseAmount) public returns (bool) {
         /// [Note]: Should approve the DataCoins in advance
         dataCoin.transferFrom(msg.sender, address(this), purchaseAmount);
 
@@ -77,7 +78,7 @@ contract StreamingElectricityMarketplace is Marketplace {
     /**
      * @notice - Grant subscription
      */
-    function grantSubscription(bytes32 productId, uint subscriptionSeconds, address recipient) public returns (bool) {
+    function grantElectricitySubscription(bytes32 productId, uint subscriptionSeconds, address recipient) public returns (bool) {
         grantSubscription(productId, subscriptionSeconds, recipient);
         //marketplace.grantSubscription(productId, subscriptionSeconds, recipient);
     }
@@ -90,7 +91,7 @@ contract StreamingElectricityMarketplace is Marketplace {
     /**
      * @notice - this method is in order to get end-timestamp of subscription of caller (msg.sender)
      */
-    function getSubscriptionTo(bytes32 productId) public view returns (bool isValid, uint endTimestamp) {
+    function getElectricitySubscriptionTo(bytes32 productId) public view returns (bool isValid, uint endTimestamp) {
         return getSubscriptionTo(productId);
         //return marketplace.getSubscriptionTo(productId);
     }

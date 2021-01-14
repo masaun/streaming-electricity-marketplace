@@ -102,18 +102,18 @@ contract("StreamingElectricityMarketplace", function(accounts) {
             let purchaseAmount = pricePerSecond * subscriptionSeconds;
             //let purchaseAmount = web3.utils.toWei(`${ pricePerSecond * subscriptionSeconds }`, 'ether');
             await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, purchaseAmount, { from: accounts[1] })
-            await streamingElectricityMarketplace.buyProduct(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
+            await streamingElectricityMarketplace.buyElectricity(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
         })
 
         it("grant fails for non-owner", async () => {
-            await assertFails(streamingElectricityMarketplace.grantSubscription(productId, 100, accounts[5], { from: accounts[5] }))
+            await assertFails(streamingElectricityMarketplace.grantElectricitySubscription(productId, 100, accounts[5], { from: accounts[5] }))
         })
 
         it("grant works for owner", async () => {
             async function testGrant(_productId) {
-                const subBefore = await streamingElectricityMarketplace.getSubscriptionTo(_productId, { from: accounts[5] })
-                streamingElectricityMarketplace.grantSubscription(_productId, 100, accounts[5], { from: accounts[0] })
-                const subAfter = await streamingElectricityMarketplace.getSubscriptionTo(_productId, { from: accounts[5] })
+                const subBefore = await streamingElectricityMarketplace.getElectricitySubscriptionTo(_productId, { from: accounts[5] })
+                streamingElectricityMarketplace.grantElectricitySubscription(_productId, 100, accounts[5], { from: accounts[0] })
+                const subAfter = await streamingElectricityMarketplace.getElectricitySubscriptionTo(_productId, { from: accounts[5] })
                 assert(subAfter.isValid)
                 assert(subAfter.endTimestamp - subBefore.endTimestamp > 100 - testToleranceSeconds)
             }
@@ -122,10 +122,10 @@ contract("StreamingElectricityMarketplace", function(accounts) {
 
         it("subscription can be extended (when subscrioption period is end and if a user pay)", async () => {
             async function testExtension(pid) {
-                const subBefore = await streamingElectricityMarketplace.getSubscriptionTo(pid, { from: accounts[1] })
+                const subBefore = await streamingElectricityMarketplace.getElectricitySubscriptionTo(pid, { from: accounts[1] })
                 assert(subBefore.isValid)
-                await streamingElectricityMarketplace.buyProduct(pid, 100, { from: accounts[1] })
-                const subAfter = await streamingElectricityMarketplace.getSubscriptionTo(pid, { from: accounts[1] })
+                await streamingElectricityMarketplace.buyElectricity(pid, 100, { from: accounts[1] })
+                const subAfter = await streamingElectricityMarketplace.getElectricitySubscriptionTo(pid, { from: accounts[1] })
                 assert(subAfter.isValid)
                 assert(subAfter.endTimestamp - subBefore.endTimestamp > 100 - testToleranceSeconds)
             }
