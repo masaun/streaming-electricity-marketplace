@@ -68,6 +68,9 @@ contract("StreamingElectricityMarketplace", function(accounts) {
             const to = accounts[1];
             const mintAmount = web3.utils.toWei('1000', 'ether');
             await dataCoin.mint(to, mintAmount, { from: accounts[0] });
+
+            const dataCoinBalance = await dataCoin.balanceOf(accounts[1], { from: accounts[1] });
+            console.log('=== DataCoin balance of buyer (accounts[1]) ===', String(dataCoinBalance));
         });
     });
 
