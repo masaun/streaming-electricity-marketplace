@@ -67,8 +67,11 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         const productId = web3.utils.padLeft(web3.utils.asciiToHex("Solar Energy One"), 64)        
         console.log('=== productId ===', productId);
 
-        it("Workflow from createProduct to buyProduct", async () => {
+        it("createProduct", async () => {
             await streamingElectricityMarketplace.createProduct(productId, "test", accounts[3], 1, Currency.DATA, 1, { from: accounts[0] })
+        })
+
+        it("buyProduct", async () => {
             await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, 1000, { from: accounts[1] })
             await streamingElectricityMarketplace.buyProduct(productId, 100, { from: accounts[1] })
         })
