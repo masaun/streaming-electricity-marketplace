@@ -6,6 +6,7 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'
 const StreamingElectricityMarketplace = artifacts.require("StreamingElectricityMarketplace");
 const ElectricityPriceOracle = artifacts.require("ElectricityPriceOracle");
 const Marketplace = artifacts.require("Marketplace");
+const Marketplace_prev = require("Marketplace20180425.json")
 const DataCoin = artifacts.require("DataCoin");
 
 /// Global variable
@@ -43,13 +44,33 @@ contract("StreamingElectricityMarketplace", function(accounts) {
             electricityPriceOracle = await ElectricityPriceOracle.new({ from: accounts[0] });
         });        
 
-        it("Setup Marketplace contract instance", async () => {
-            marketplace = await Marketplace.at(MARKETPLACE, { from: accounts[0] });
-        }); 
-
         it("Setup DataCoin contract instance", async () => {
+            //dataCoin = await DataCoin.at(DATA_COIN, { from: accounts[0] });
             dataCoin = await DataCoin.new({ from: accounts[0] });
         }); 
+
+        it("Setup Marketplace contract instance (inherit from the Mainnet address)", async () => {
+            //marketplace = await Marketplace.at(MARKETPLACE, { from: accounts[0] });
+        }); 
+
+        it("Setup Marketplace contract instance (stand alone)", async () => {
+            const datacoinAddress = dataCoin.address;
+            const currencyUpdateAgentAddress = accounts[8];
+            const prev_marketplace_address = Marketplace_prev.address;  /// [Todo]: Assign mainnet address from ../utils/streamr/build/contracts/Marketplace20180425.json
+            marketplace = await Marketplace.new(datacoinAddress, currencyUpdateAgentAddress, prev_marketplace_address, { from: accounts[0] });
+
+            // w3.eth.getBlock("latest").then((block) => {console.log("gasLimit: " + block.gasLimit)});
+
+            // const productId = "test-e2e"
+            // const productIdHex = w3.utils.utf8ToHex(productId)
+            // await market.methods.createProduct(productIdHex, "End-to-end tester", accounts[3], 1, Currency.DATA, 1)
+            //     .send({from: accounts[0], gas: 4000000})
+            // await token.methods.mint(accounts[1], 100000).send({from: accounts[0], gas: 4000000})
+            // await token.methods.approve(market.options.address, 10000).send({from: accounts[1], gas: 4000000})
+
+            // TODO: find out why the following fails
+            // await market.methods.buy(productIdHex, 10).send({from: accounts[1], gas: 4000000})
+        })
 
         it("Setup StreamingElectricityMarketplace contract instance", async () => {
             const _electricityPriceOracle = electricityPriceOracle.address;
