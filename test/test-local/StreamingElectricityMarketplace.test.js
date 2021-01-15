@@ -6,7 +6,7 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'
 const StreamingElectricityMarketplace = artifacts.require("StreamingElectricityMarketplace");
 const ElectricityPriceOracle = artifacts.require("ElectricityPriceOracle");
 const Marketplace = artifacts.require("Marketplace");
-const Marketplace_prev = require("Marketplace20180425.json")
+const Marketplace_prev = require("../utils/streamr/build-streamr/contracts/Marketplace20180425.json")
 const DataCoin = artifacts.require("DataCoin");
 
 /// Global variable
