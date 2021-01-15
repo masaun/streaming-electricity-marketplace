@@ -6,7 +6,7 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'
 const StreamingElectricityMarketplace = artifacts.require("StreamingElectricityMarketplace");
 const ElectricityPriceOracle = artifacts.require("ElectricityPriceOracle");
 const Marketplace = artifacts.require("Marketplace");
-const Marketplace_prev = require("../utils/streamr/build_streamr/contracts/Marketplace20180425.json")
+const Marketplace_prev = artifacts.require("Marketplace20180425")
 const DataCoin = artifacts.require("DataCoin");
 
 /// Global variable
@@ -57,7 +57,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
             const datacoinAddress = dataCoin.address;
             const currencyUpdateAgentAddress = accounts[8];
 
-            /// Deploy the Marketplace20180425.sol
+            /// Deploy the Marketplace20180425.sol (Marketplace_prev)
             marketplace_prev = await Marketplace_prev.new(datacoinAddress, currencyUpdateAgentAddress, { from: accounts[0] });
 
             /// Deploy the Marketplace.sol
