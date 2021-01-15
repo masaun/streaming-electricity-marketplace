@@ -6,7 +6,7 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'
 const StreamingElectricityMarketplace = artifacts.require("StreamingElectricityMarketplace");
 const ElectricityPriceOracle = artifacts.require("ElectricityPriceOracle");
 const Marketplace = artifacts.require("Marketplace");
-const Marketplace_prev = require("../utils/streamr/build-streamr/contracts/Marketplace20180425.json")
+const Marketplace_prev = require("../utils/streamr/build_streamr/contracts/Marketplace20180425.json")
 const DataCoin = artifacts.require("DataCoin");
 
 /// Global variable
@@ -56,7 +56,12 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         it("Setup Marketplace contract instance (stand alone)", async () => {
             const datacoinAddress = dataCoin.address;
             const currencyUpdateAgentAddress = accounts[8];
-            const prev_marketplace_address = Marketplace_prev.address;  /// [Todo]: Assign mainnet address from ../utils/streamr/build/contracts/Marketplace20180425.json
+
+            /// Deploy the Marketplace20180425.sol
+            marketplace_prev = await Marketplace_prev.new(datacoinAddress, currencyUpdateAgentAddress, { from: accounts[0] });
+
+            /// Deploy the Marketplace.sol
+            const prev_marketplace_address = marketplace_prev.address;  /// [Todo]: Assign mainnet address from ../utils/streamr/build/contracts/Marketplace20180425.json
             marketplace = await Marketplace.new(datacoinAddress, currencyUpdateAgentAddress, prev_marketplace_address, { from: accounts[0] });
 
             // w3.eth.getBlock("latest").then((block) => {console.log("gasLimit: " + block.gasLimit)});
@@ -74,7 +79,7 @@ contract("StreamingElectricityMarketplace", function(accounts) {
 
         it("Setup StreamingElectricityMarketplace contract instance", async () => {
             const _electricityPriceOracle = electricityPriceOracle.address;
-            const _marketplace = MARKETPLACE;
+            const _marketplace = marketplace.address;
             const _dataCoin = dataCoin.address;
             streamingElectricityMarketplace = await StreamingElectricityMarketplace.new(_electricityPriceOracle,
                                                                                         _marketplace,
