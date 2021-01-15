@@ -9,6 +9,7 @@ import { ElectricityPriceOracle } from "./ElectricityPriceOracle.sol";
 
 /// Streamr
 import { Marketplace } from "./streamr/Marketplace.sol";  /// [Note]: Include UniswapAdaptor.sol and BancorAdaptor.sol
+import { DataCoin } from "./DataCoin.sol";
 
 
 /**
@@ -26,36 +27,53 @@ contract StreamingElectricityMarketplace {
 
     ElectricityPriceOracle public electricityPriceOracle;
     Marketplace public marketplace;
-    ERC20 public dataToken;
+    DataCoin public dataCoin;
 
     address MARKETPLACE;
 
-    constructor(ElectricityPriceOracle _electricityPriceOracle, Marketplace _marketplace, address _dataToken) public {
+    constructor(ElectricityPriceOracle _electricityPriceOracle, Marketplace _marketplace, DataCoin _dataCoin) public {
         electricityPriceOracle = _electricityPriceOracle;
         marketplace = _marketplace;
-        dataToken = ERC20(_dataToken);
+        dataCoin = _dataCoin;
 
         MARKETPLACE = address(_marketplace);
     }
 
+
     ///------------------------------------------------------------------------------------
-    /// [Attention]: This smart contract does delegate execution on behalf of msg.sender
+    /// [Attention]: This smart contract conduct delegate executions on behalf of msg.sender
     ///------------------------------------------------------------------------------------
 
+    /**
+     * @notice - Launch electricity-based product 
+     * @dev - ProductId = 1:Solar Power, 2:Hydro Power, etc...
+     */
     function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
+        //dataCoin.approve(MARKETPLACE, 1000);
         marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
     }
 
-    function buyProduct(bytes32 productId, uint purchaseAmount) public returns (bool) {
-        /// [Note]: Should approve the DataTokens in advance
-        dataToken.transferFrom(msg.sender, address(this), purchaseAmount);
+    /**
+     * @notice - Buy and start a subscription payment for electricity
+     */
+    function buyProduct(bytes32 productId, uint subscriptionSeconds, uint purchaseAmount) public returns (bool) {
+        /// [Note]: Should approve the DataCoins in advance
+        dataCoin.transferFrom(msg.sender, address(this), purchaseAmount);
 
         /// [Note]: approve this contract for the Marketplace contract
-        dataToken.approve(MARKETPLACE, purchaseAmount);
+        dataCoin.approve(MARKETPLACE, purchaseAmount);
 
-        /// Buy for a product with the DataTokens 
-        marketplace.buy(productId, purchaseAmount);
+        /// Buy for a product with the DataCoins 
+        marketplace.buy(productId, subscriptionSeconds);
     }
+
+    /**
+     * @notice - Grant subscription
+     */
+    function grantSubscription(bytes32 productId, uint subscriptionSeconds, address recipient) public returns (bool) {
+        marketplace.grantSubscription(productId, subscriptionSeconds, recipient);
+    }
+    
     
 
     /////////////////////

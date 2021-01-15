@@ -49,8 +49,8 @@ $ ganache-cli --fork https://mainnet.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBE
 
 - 2: Execute test of contracts (on the local)
 ```
-$ npm run test
-($ truffle test ./test/test-local/*)
+$ npm run test:streaming
+($ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js)
 ```
 
 <br>
