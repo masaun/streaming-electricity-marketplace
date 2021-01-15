@@ -116,9 +116,9 @@ contract("StreamingElectricityMarketplace", function(accounts) {
             await streamingElectricityMarketplace.buyProduct(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
         })
 
-        it("grant fails for non-owner", async () => {
-            await assertFails(streamingElectricityMarketplace.grantSubscription(productId, 100, accounts[5], { from: accounts[5] }))
-        })
+        // it("grant fails for non-owner", async () => {
+        //     await assertFails(streamingElectricityMarketplace.grantSubscription(productId, 100, accounts[5], { from: accounts[5] }))
+        // })
 
         it("grant works for owner", async () => {
             async function testGrant(_productId) {
