@@ -2,19 +2,20 @@
 
 ***
 ## 【Introduction of the Streaming Electricity Marketplace】
-- This is a smart contract that allow a buyer to be able to buy electricity with subscription plan.
+- This is a smart contract that allow a buyer to be able to buy electricity with subscription (streaming) plan.
+- Streamr and Provable Things are used for implementing this smart contract.
 
 &nbsp;
 
 ***
 
 ## 【Workflow】
-- A producer create the energy product.   
+- ① A producer create the energy product.   
   At that time,   
   - an energy product ID is published.  
   - Subscription fees and subscription period are defined by a producer.  
-- A buyer buy the energy product which they prefer by paying for subscription fees.   
-- Once subscription period is expired, a buyer can extend subscription period by paying for subscription fees again.  
+- ② A buyer buy the energy product which they prefer by paying for subscription fees.   
+- ③ Once subscription period is expired, a buyer can extend subscription period by paying for subscription fees again.  
 
 
 &nbsp;
@@ -70,7 +71,7 @@ $ npm run test:streaming
 ***
 
 ## 【References】
-- Streamer
+- Streamr
   - Marketplace smart-contract（Solidity v0.5.16）：https://github.com/streamr-dev/marketplace-contracts 
   - Doc（Data Union）：https://streamr.network/docs/data-unions/intro-to-data-unions
   - Devpost（Hacker Guide）：https://oceandec.devpost.com/details/hackerguide
