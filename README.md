@@ -1,14 +1,20 @@
-# streaming-electricity-marketplace-with-datatoken
+# Streaming Electricity Marketplace
 
 ***
-## 【Introduction of the streaming-electricity-marketplace-with-datatoken】
-- This is a smart contract for ...
+## 【Introduction of the Streaming Electricity Marketplace】
+- This is a smart contract that allow a buyer to be able to buy electricity with subscription plan.
 
 &nbsp;
 
 ***
 
 ## 【Workflow】
+- A producer create the energy product.   
+  At that time,   
+  - an energy product ID is published.  
+  - Subscription fees and subscription period are defined by a producer.  
+- A buyer buy the energy product which they prefer by paying for subscription fees.   
+- Once subscription period is expired, a buyer can extend subscription period by paying for subscription fees again.  
 
 
 &nbsp;
@@ -18,7 +24,11 @@
 ## 【Remarks】
 - Version for following the Streamer smart contract
   - Solidity (Solc): v0.5.16
+  - Truffle: v5.1.60
+  - web3.js: v1.2.9
   - openzeppelin-solidity: v2.5.0
+  - ganache-cli: v6.9.1 (ganache-core: 2.10.2)
+
 
 &nbsp;
 
@@ -47,9 +57,10 @@ $ ganache-cli --fork https://mainnet.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBE
 
 <br>
 
-- 2: Execute test of contracts (on the local)
+- 2: Execute test of the StreamingElectricityMarketplace contracts (on the local)
 ```
 $ npm run test:streaming
+
 ($ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js)
 ```
 
@@ -65,6 +76,12 @@ $ npm run test:streaming
   - Devpost（Hacker Guide）：https://oceandec.devpost.com/details/hackerguide
   - Slide：https://docs.google.com/presentation/d/1QjBD3s-2fS-CrETtPAHrSR4PuFFSRFvvimJOCQbmvGI/edit#slide=id.g875ff90d1f_0_0
   - Streamr Data Challenge 2021：https://www.streamrdatachallenge.com
+
+<br>
+
+- Provable Things (for oracle of energy price)
+  - FuelPrice.sol（include the Electric Price⚡）：https://github.com/ngyam/tutorial-oraclize/blob/master/contracts/FuelPrice.sol
+  - Test query tool (provided by the Provable Things)：https://app.provable.xyz/home/test_query
 
 <br>
 
