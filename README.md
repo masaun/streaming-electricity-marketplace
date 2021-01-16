@@ -37,7 +37,16 @@
 
 ## 【Setup】
 ### ① Install modules
+- Install npm modules in the root directory
 ```
+$ npm install
+```
+
+<br>
+
+- Install npm modules in the `./ethereum-bridge` directory
+```
+$ cd ethereum-bridge
 $ npm install
 ```
 
@@ -58,7 +67,14 @@ $ ganache-cli --fork https://mainnet.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBE
 
 <br>
 
-- 2: Execute test of the smart-contracts (on the local)
+- 2: Start ethereum-bridge
+```
+$ node bridge -H localhost:8545 -a 1
+```
+
+<br>
+
+- 3: Execute test of the smart-contracts (on the local)
   - Test for the StreamingElectricityMarketplace contracts
     `$ npm run test:streaming`  
     ($ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js)
