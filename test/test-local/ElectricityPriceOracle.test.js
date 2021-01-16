@@ -20,6 +20,7 @@ contract("ElectricityPriceOracle", function(accounts) {
         });        
 
         it("Setup ElectricityPriceOracle contract instance", async () => {
+            /// [Note]: Transfer 1 ETH
             electricityPriceOracle = await ElectricityPriceOracle.new({ from: accounts[0], value: web3.utils.toWei("1", "ether") });
         });
     });
@@ -32,7 +33,7 @@ contract("ElectricityPriceOracle", function(accounts) {
 
         // call the getRandomNumber function
         // make sure to send enough Ether and to set gas limit sufficiently high
-        const result = await fuelPrice.updateElectric({
+        const result = await electricityPriceOracle.updateElectric({
             from: accounts[0],
             value: web3.utils.toWei('1', 'ether'),
             gas: '5000000',
@@ -54,7 +55,7 @@ contract("ElectricityPriceOracle", function(accounts) {
 
         // listen for LogResultReceived event to check for Oraclize's call to _callback
         // define events we want to listen for
-        const NewPrice = fuelPrice.NewPrice()
+        const NewPrice = electricityPriceOracle.NewPrice()
 
         // create promise so Mocha waits for value to be returned
         let checkForNumber = new Promise((resolve, reject) => {
@@ -64,7 +65,7 @@ contract("ElectricityPriceOracle", function(accounts) {
                   reject(error)
                 }
                 // template.randomNumber() returns a BigNumber object
-                const bigNumber = await fuelPrice.electricPriceUSD.call()
+                const bigNumber = await electricityPriceOracle.electricPriceUSD.call()
                 // convert BigNumber to ordinary number
                 const electricPriceUSD = bigNumber.toNumber()
                 // stop watching event and resolve promise
