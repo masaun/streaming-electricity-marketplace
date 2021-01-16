@@ -76,6 +76,8 @@ contract("ElectricityPriceOracle", function(accounts) {
 
         // call promise and wait for result
         const electricPriceUSD = await checkForNumber
+        console.log('\n=== electricPriceUSD ===', electricPriceUSD);
+
         // ensure result is within our query's min/max values
         assert.notEqual(electricPriceUSD, 0, 'Electricity price was zero.')
     });

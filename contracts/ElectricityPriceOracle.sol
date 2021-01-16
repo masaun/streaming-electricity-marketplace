@@ -15,11 +15,9 @@ contract ElectricityPriceOracle is usingOraclize {
 
     enum Query {
         INVALID,
-        DIESEL,
         ELECTRIC
     }
 
-    uint public dieselPriceUSD;
     uint public electricPriceUSD;
 
     mapping(bytes32 => Query) validIds;
