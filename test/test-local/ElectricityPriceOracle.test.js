@@ -10,7 +10,7 @@ const ElectricityPriceOracle = artifacts.require("ElectricityPriceOracle");
  * @dev - Execution COMMAND: $ truffle test ./test/test-local/ElectricityPriceOracle.test.js
  **/
 contract("ElectricityPriceOracle", function(accounts) {
-    /// Global variable
+    /// Global ElectricityPriceOracle contract instance
     let electricityPriceOracle;
 
     describe("Setup smart-contracts", () => {
@@ -55,12 +55,14 @@ contract("ElectricityPriceOracle", function(accounts) {
 
             // listen for LogResultReceived event to check for Oraclize's call to _callback
             // define events we want to listen for
-            const NewPrice = electricityPriceOracle.NewPrice()
+            const NewPrice = electricityPriceOracle.events.NewPrice()  /// [Note]: web3.js v1.0.0
+            //const NewPrice = electricityPriceOracle.NewPrice()       /// [Note]: web3.js v0.2.0
 
             // create promise so Mocha waits for value to be returned
             let checkForNumber = new Promise((resolve, reject) => {
                 // watch for our LogResultReceived event
-                NewPrice.watch(async function (error, result) {
+                NewPrice(async function (error, result) {           /// [Note]: web3.js v1.0.0
+                //NewPrice.watch(async function (error, result) {   /// [Note]: web3.js v0.2.0
                     if (error) {
                       reject(error)
                     }
