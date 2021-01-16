@@ -80,9 +80,13 @@ $ npm run test:streaming
 
 <br>
 
-- Provable Things (for oracle of energy price)
-  - FuelPrice.sol（include the Electric Price⚡）：https://github.com/ngyam/tutorial-oraclize/blob/master/contracts/FuelPrice.sol
-  - Test query tool (provided by the Provable Things)：https://app.provable.xyz/home/test_query
+- Energy Web Foundation (EWF)
+  - Data for your contracts: Oracles with Oraclize
+    https://energyweb.atlassian.net/wiki/spaces/EWF/pages/558432257/Data+for+your+contracts+Oracles+with+Oraclize
+
+  - `Provable Things` is used as oracle for getting the energy price
+    - FuelPrice.sol（include getting method for the Electric Price）：https://github.com/ngyam/tutorial-oraclize/blob/master/contracts/FuelPrice.sol
+    - Test query tool (provided by the Provable Things)：https://app.provable.xyz/home/test_query
 
 <br>
 
