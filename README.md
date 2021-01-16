@@ -90,6 +90,9 @@ $ ganache-cli --fork https://mainnet.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBE
     - oraclizeAPI_0.5.sol:   
       https://github.com/provable-things/ethereum-api/blob/master/oraclizeAPI_0.5.sol  
 
+    - ethereum-bridge:  
+      https://github.com/provable-things/ethereum-bridge  
+
     - Method for getting the Electric Price：
       - FuelPrice.sol: https://github.com/ngyam/tutorial-oraclize/blob/master/contracts/FuelPrice.sol 
       - Test of FuelPrice.sol: https://github.com/ngyam/tutorial-oraclize/blob/master/test/response.js
