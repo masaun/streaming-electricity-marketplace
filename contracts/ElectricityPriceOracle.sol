@@ -28,10 +28,8 @@ contract ElectricityPriceOracle is usingOraclize {
     event UpdateInvoke(address sender);
     event NewPrice(string what, string price, bytes32 id);
 
-    constructor() public {}
 
-
-    function requestLatestElectricPrice() public payable {
+    constructor() public payable {
         // send some Ethers with the deployment!
 
         // this line is given by the ethereum-bridge
