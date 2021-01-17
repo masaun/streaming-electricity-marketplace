@@ -57,10 +57,10 @@ contract("ElectricityPriceOracle", function(accounts) {
                 }
             } = await waitForEvent(contractEvents.NewPrice)
             newPriceFromContractEvent = _priceInCents
-            assert(
-                parseInt(_priceInCents) > 0,
-                'A price should have been retrieved from Provable call!'
-            )
+            // assert(
+            //     parseInt(_priceInCents) > 0,
+            //     'A price should have been retrieved from Provable call!'
+            // )
         })
     });
 
@@ -80,6 +80,23 @@ contract("ElectricityPriceOracle", function(accounts) {
             })
             console.log('\n=== result ===', result);
 
+
+            ///------------------------------------------------------------
+            /// [Test]: By using waitForEvent() from the Provable-Things
+            ///------------------------------------------------------------
+            const {
+                returnValues: {
+                    _newEnergyPrice
+                }
+            } = await waitForEvent(contractEvents.NewPrice)
+            newEnergyPriceFromContractEvent = _newEnergyPrice
+            console.log('\n=== newEnergyPriceFromContractEvent ===', newEnergyPriceFromContractEvent);
+
+
+
+
+
+
             // Method 1 to check for events: loop through the "result" variable
 
             // look for the NewOraclizeQuery event to make sure query sent
@@ -96,16 +113,16 @@ contract("ElectricityPriceOracle", function(accounts) {
             ///---------------------------
             /// [Test]: web3.js v1.0.0
             ///---------------------------
-            electricityPriceOracle.events.NewPrice({
-                fromBlock: 'latest',
-                toBlock: 'latest'
-            }, function(error, result) {
-                if (!error) {
-                    console.log('\n=== result ([Test]: web3.js v1.0.0) ===', result);
-                } else {
-                    console.log('\n=== error ([Test]: web3.js v1.0.0) ===', error);
-                }
-            });
+            // electricityPriceOracle.events.NewPrice({
+            //     fromBlock: 'latest',
+            //     toBlock: 'latest'
+            // }, function(error, result) {
+            //     if (!error) {
+            //         console.log('\n=== result ([Test]: web3.js v1.0.0) ===', result);
+            //     } else {
+            //         console.log('\n=== error ([Test]: web3.js v1.0.0) ===', error);
+            //     }
+            // });
 
 
             ///---------------------------
