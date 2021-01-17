@@ -31,7 +31,7 @@ contract ElectricityPriceOracle is usingOraclize {
         // send some Ethers with the deployment!
 
         // this line is given by the ethereum-bridge
-        OAR = OraclizeAddrResolverI(0x99a3da76129B069b3ed6d4D98085de9282af35F7);  /// [Note]: This address must be changed every execution of ethereum-bridge
+        OAR = OraclizeAddrResolverI(0x092c1C058aA9cdB2a902e0deFe28b5cd6055d30f);  /// [Note]: This address must be changed every execution of ethereum-bridge
 
         // first check at contract creation
         updateElectric();

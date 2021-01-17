@@ -2,6 +2,9 @@
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
+/// Helper for getting Events of Provable-Things
+const { waitForEvent } = require('../utils/provable-things/getEventsHelper.js');
+
 /// Artifact of the ElectricityPriceOracle.test contract 
 const ElectricityPriceOracle = artifacts.require("ElectricityPriceOracle");
 
@@ -13,6 +16,14 @@ contract("ElectricityPriceOracle", function(accounts) {
     /// Global ElectricityPriceOracle contract instance
     let electricityPriceOracle;
 
+    /// Global variable for testing of listening events
+    let contractEvents;
+    let contractMethods;
+    let contractAddress;
+    const GAS_LIMIT = 3e6;
+    const PROVABLE_QUERY_EVENT_NEW_PRICE = 'NewPrice';
+
+
     describe("Setup smart-contracts", () => {
         it("Check all accounts", async () => {
             console.log('=== accounts ===\n', accounts);
@@ -22,6 +33,35 @@ contract("ElectricityPriceOracle", function(accounts) {
             /// [Note]: Transfer 1 ETH
             electricityPriceOracle = await ElectricityPriceOracle.new({ from: accounts[0], value: web3.utils.toWei("1", "ether") });
         });
+    });
+
+    describe("Listening events", () => {
+        it('Should get contract instantiation for listening to events', async () => {
+            /// Using deployed contract
+            const { contract: deployedContract } = await electricityPriceOracle;
+
+            /// Using websocket
+            const { methods, events } = new web3.eth.Contract(
+              deployedContract._jsonInterface,
+              deployedContract._address
+            )
+            contractEvents = events
+            contractMethods = methods
+            contractAddress = deployedContract._address
+        })
+
+        it('Callback should have logged a new Energy Price', async () => {
+            const {
+                returnValues: {
+                    _priceInCents
+                }
+            } = await waitForEvent(contractEvents.NewPrice)
+            newPriceFromContractEvent = _priceInCents
+            assert(
+                parseInt(_priceInCents) > 0,
+                'A price should have been retrieved from Provable call!'
+            )
+        })
     });
 
     describe("Retrieve an electricity price", () => {
