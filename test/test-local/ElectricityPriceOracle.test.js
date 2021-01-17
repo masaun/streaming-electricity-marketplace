@@ -17,11 +17,7 @@ contract("ElectricityPriceOracle", function(accounts) {
     let electricityPriceOracle;
 
     /// Global variable for testing of listening events
-    let contractEvents;
-    let contractMethods;
-    let contractAddress;
-    const GAS_LIMIT = 3e6;
-    const PROVABLE_QUERY_EVENT_NEW_PRICE = 'NewPrice';
+    let energyPrice;
 
 
     describe("Setup smart-contracts", () => {
@@ -38,29 +34,43 @@ contract("ElectricityPriceOracle", function(accounts) {
     describe("Listening events", () => {
         it('Should get contract instantiation for listening to events', async () => {
             /// Using deployed contract
-            const { contract: deployedContract } = await electricityPriceOracle;
+            //const { contract } = await ElectricityPriceOracle.deployed();
+            const { contract } = await electricityPriceOracle;
 
             /// Using websocket
             const { methods, events } = new web3.eth.Contract(
-              deployedContract._jsonInterface,
-              deployedContract._address
+                contract._jsonInterface,
+                contract._address
             )
-            contractEvents = events
-            contractMethods = methods
-            contractAddress = deployedContract._address
+
+            /// [Log]
+            console.log('\n=== events ===', events);
+
         })
 
         it('Callback should have logged a new Energy Price', async () => {
             const {
                 returnValues: {
-                    _priceInCents
+                    newEnergyPrice
                 }
-            } = await waitForEvent(contractEvents.NewPrice)
-            newPriceFromContractEvent = _priceInCents
-            // assert(
-            //     parseInt(_priceInCents) > 0,
-            //     'A price should have been retrieved from Provable call!'
-            // )
+            } = await waitForEvent(events.NewPrice);
+
+            energyPrice = newEnergyPrice * 100;
+            console.log('\n=== energyPrice ===', parseInt(energyPrice));
+        })
+
+        it('Should set Energy Price correctly in contract', async () => {
+            const queriedPrice = await methods
+                .electricPriceUSD()
+                .call()
+
+            console.log('\n=== queriedPrice ===', parseInt(queriedPrice));
+
+            assert.strictEqual(
+                parseInt(contractPrice),
+                parseInt(queriedPrice),
+                'Contract\'s Energy Price not set correctly!'
+            )
         })
     });
 
@@ -113,16 +123,16 @@ contract("ElectricityPriceOracle", function(accounts) {
             ///---------------------------
             /// [Test]: web3.js v1.0.0
             ///---------------------------
-            // electricityPriceOracle.events.NewPrice({
-            //     fromBlock: 'latest',
-            //     toBlock: 'latest'
-            // }, function(error, result) {
-            //     if (!error) {
-            //         console.log('\n=== result ([Test]: web3.js v1.0.0) ===', result);
-            //     } else {
-            //         console.log('\n=== error ([Test]: web3.js v1.0.0) ===', error);
-            //     }
-            // });
+            electricityPriceOracle.events.NewPrice({
+                fromBlock: 'latest',
+                toBlock: 'latest'
+            }, function(error, result) {
+                if (!error) {
+                    console.log('\n=== result ([Test]: web3.js v1.0.0) ===', result);
+                } else {
+                    console.log('\n=== error ([Test]: web3.js v1.0.0) ===', error);
+                }
+            });
 
 
             ///---------------------------

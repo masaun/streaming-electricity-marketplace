@@ -31,7 +31,7 @@ contract ElectricityPriceOracle is usingOraclize {
         // send some Ethers with the deployment!
 
         // this line is given by the ethereum-bridge
-        OAR = OraclizeAddrResolverI(0xee32CCCb7e2777628E915F911797Fe80a5899843);  /// [Note]: This address must be changed every execution of ethereum-bridge
+        OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);  /// [Note]: This address must be changed every execution of ethereum-bridge
 
         // first check at contract creation
         updateElectric();
@@ -44,13 +44,17 @@ contract ElectricityPriceOracle is usingOraclize {
         emit UpdateInvoke(msg.sender);
         if (msg.sender != oraclize_cbAddress()) revert();
         
-        if (validIds[myid] == Query.ELECTRIC) {
-            electricPriceUSD = parseInt(result, 2); // let's save it as $ cents
-            emit NewPrice("Electric", result, myid);
-        } else {
-            // validIds[myid] == Query.INVALID
-            revert();
-        }
+        electricPriceUSD = parseInt(result, 2); // let's save it as $ cents
+        emit NewPrice("Electric", result, myid);
+
+        // if (validIds[myid] == Query.ELECTRIC) {
+        //     electricPriceUSD = parseInt(result, 2); // let's save it as $ cents
+        //     emit NewPrice("Electric", result, myid);
+        // } else {
+        //     // validIds[myid] == Query.INVALID
+        //     revert();
+        // }
+
         // This query id is invalidated 
         validIds[myid] = Query.INVALID;
     }
