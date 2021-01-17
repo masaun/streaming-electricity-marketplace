@@ -38,6 +38,7 @@ contract("ElectricityPriceOracle", function(accounts) {
                 value: web3.utils.toWei('1', 'ether'),
                 gas: '5000000',
             })
+            console.log('\n=== result ===', result);
 
             // Method 1 to check for events: loop through the "result" variable
 
@@ -51,6 +52,26 @@ contract("ElectricityPriceOracle", function(accounts) {
             }
             assert(testPassed, '"NewOraclizeQuery" event not found')
 
+
+            ///---------------------------
+            /// [Test]: web3.js v1.0.0
+            ///---------------------------
+            electricityPriceOracle.events.NewPrice({
+                fromBlock: 'latest',
+                toBlock: 'latest'
+            }, function(error, result) {
+                if (!error) {
+                    console.log('\n=== result ([Test]: web3.js v1.0.0) ===', result);
+                } else {
+                    console.log('\n=== error ([Test]: web3.js v1.0.0) ===', error);
+                }
+            });
+
+
+            ///---------------------------
+            /// Original Code 
+            ///---------------------------
+
             // Method 2 to check for events: listen for them with .watch()
 
             // listen for LogResultReceived event to check for Oraclize's call to _callback
@@ -61,8 +82,8 @@ contract("ElectricityPriceOracle", function(accounts) {
             // create promise so Mocha waits for value to be returned
             let checkForNumber = new Promise((resolve, reject) => {
                 // watch for our LogResultReceived event
-                NewPrice(async function (error, result) {           /// [Note]: web3.js v1.0.0
-                //NewPrice.watch(async function (error, result) {   /// [Note]: web3.js v0.2.0
+                electricityPriceOracle.events.NewPrice(async function(error, result) {  /// [Note]: web3.js v1.0.0
+                //NewPrice.watch(async function (error, result) {                       /// [Note]: web3.js v0.2.0
                     if (error) {
                       reject(error)
                     }
@@ -74,7 +95,7 @@ contract("ElectricityPriceOracle", function(accounts) {
                     const electricPriceUSD = bigNumber.toNumber()
                     
                     // stop watching event and resolve promise
-                    NewPrice.stopWatching()
+                    //NewPrice.stopWatching()
                     resolve(electricPriceUSD)
                 }) // end LogResultReceived.watch()
             }) // end new Promise
