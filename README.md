@@ -37,7 +37,16 @@
 
 ## 【Setup】
 ### ① Install modules
+- Install npm modules in the root directory
 ```
+$ npm install
+```
+
+<br>
+
+- Install npm modules in the `./ethereum-bridge` directory
+```
+$ cd ethereum-bridge
 $ npm install
 ```
 
@@ -58,12 +67,21 @@ $ ganache-cli --fork https://mainnet.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBE
 
 <br>
 
-- 2: Execute test of the StreamingElectricityMarketplace contracts (on the local)
+- 2: Start ethereum-bridge
 ```
-$ npm run test:streaming
+$ node bridge -H localhost:8545 -a 1
+```
 
-($ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js)
-```
+<br>
+
+- 3: Execute test of the smart-contracts (on the local)
+  - Test for the StreamingElectricityMarketplace contracts
+    `$ npm run test:streaming`  
+    ($ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js)
+  
+  - Test for the ElectricityPriceOracle contract
+    `$ npm run test:oracle`
+    (truffle test ./test/test-local/ElectricityPriceOracle.test.js)
 
 <br>
 
@@ -80,9 +98,23 @@ $ npm run test:streaming
 
 <br>
 
-- Provable Things (for oracle of energy price)
-  - FuelPrice.sol（include the Electric Price⚡）：https://github.com/ngyam/tutorial-oraclize/blob/master/contracts/FuelPrice.sol
-  - Test query tool (provided by the Provable Things)：https://app.provable.xyz/home/test_query
+- Energy Web Foundation (EWF)
+  - Data for your contracts: Oracles with Oraclize
+    https://energyweb.atlassian.net/wiki/spaces/EWF/pages/558432257/Data+for+your+contracts+Oracles+with+Oraclize
+
+  - `Provable Things` is used as oracle for getting the energy price   
+    - oraclizeAPI_0.5.sol:   
+      https://github.com/provable-things/ethereum-api/blob/master/oraclizeAPI_0.5.sol  
+
+    - ethereum-bridge:  
+      https://github.com/provable-things/ethereum-bridge  
+
+    - Method for getting the Electric Price：
+      - FuelPrice.sol: https://github.com/ngyam/tutorial-oraclize/blob/master/contracts/FuelPrice.sol 
+      - Test of FuelPrice.sol: https://github.com/ngyam/tutorial-oraclize/blob/master/test/response.js
+
+    - Test query tool (provided by the Provable Things)：  
+      https://app.provable.xyz/home/test_query  
 
 <br>
 
