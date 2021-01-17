@@ -18,7 +18,7 @@ contract("ElectricityPriceOracle", function(accounts) {
 
     /// Global variable for testing of listening events
     let energyPrice;
-
+    let queriedPrice;
 
     describe("Setup smart-contracts", () => {
         it("Check all accounts", async () => {
@@ -32,9 +32,23 @@ contract("ElectricityPriceOracle", function(accounts) {
     });
 
     describe("Listening events", () => {
-        it('Should get contract instantiation for listening to events', async () => {
+        // it('Should get contract instantiation for listening to events', async () => {
+        //     /// Using deployed contract
+        //     const { contract } = await electricityPriceOracle;
+
+        //     /// Using websocket
+        //     const { methods, events } = new web3.eth.Contract(
+        //         contract._jsonInterface,
+        //         contract._address
+        //     )
+
+        //     /// [Log]
+        //     console.log('\n=== events ===', events);
+
+        // })
+
+        it('Callback should have logged a new Energy Price', async () => {
             /// Using deployed contract
-            //const { contract } = await ElectricityPriceOracle.deployed();
             const { contract } = await electricityPriceOracle;
 
             /// Using websocket
@@ -46,28 +60,38 @@ contract("ElectricityPriceOracle", function(accounts) {
             /// [Log]
             console.log('\n=== events ===', events);
 
-        })
-
-        it('Callback should have logged a new Energy Price', async () => {
+            /// Retrieve the returned value of NewPrice Event
             const {
-                returnValues: {
-                    newEnergyPrice
+                returnValues: {  /// [Note]: "what", "price", "id" are parameters of the NewPrice Event in ElectricityPriceOracle.sol
+                    what, 
+                    price, 
+                    id
                 }
             } = await waitForEvent(events.NewPrice);
 
-            energyPrice = newEnergyPrice * 100;
-            console.log('\n=== energyPrice ===', parseInt(energyPrice));
+            energyPrice = price * 100;
+            console.log('\n=== energyPrice ===', parseInt(energyPrice));  /// [Result]: 13
         })
 
         it('Should set Energy Price correctly in contract', async () => {
-            const queriedPrice = await methods
-                .electricPriceUSD()
+            /// Using deployed contract
+            const { contract } = await electricityPriceOracle;
+
+            /// Using websocket
+            const { methods, events } = new web3.eth.Contract(
+                contract._jsonInterface,
+                contract._address
+            )
+
+            /// Check queriedPrice
+            queriedPrice = await methods
+                .electricPriceUSD()  /// [Note]: "electricPriceUSD" is the global variable defined in the ElectricityPriceOracle.sol
                 .call()
 
-            console.log('\n=== queriedPrice ===', parseInt(queriedPrice));
+            console.log('\n=== queriedPrice ===', parseInt(queriedPrice)); /// [Result]: 13
 
             assert.strictEqual(
-                parseInt(contractPrice),
+                parseInt(energyPrice),
                 parseInt(queriedPrice),
                 'Contract\'s Energy Price not set correctly!'
             )
