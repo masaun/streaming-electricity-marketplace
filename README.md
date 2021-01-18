@@ -60,9 +60,9 @@ $ npm run migrate:local
 <br>
 
 ### ③ Test (Mainnet-fork approach)
-- 1: Start ganache-cli with mainnet-fork
+- 1: Start ganache-cli
 ```
-$ ganache-cli --fork https://mainnet.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBER}
+$ ganache-cli
 ```
 
 <br>
@@ -115,10 +115,3 @@ $ node bridge -H localhost:8545 -a 1
 
     - Test query tool (provided by the Provable Things)：  
       https://app.provable.xyz/home/test_query  
-
-<br>
-
-- Truffle test
-  - Mainnet-fork approach with Ganache-CLI and Infura   
-https://medium.com/@samajammin/how-to-interact-with-ethereums-mainnet-in-a-development-environment-with-ganache-3d8649df0876    
-(Current block number @ mainnet: https://etherscan.io/blocks )    
