@@ -150,39 +150,39 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         const productId = web3.utils.padLeft(web3.utils.asciiToHex(`Energy_Asset_${testIndex}`), 64)        
         console.log('=== productId ===', productId);
 
-        it("createProduct", async () => {
+        it("createElectricityAsProduct", async () => {
             const name = `Energy_Asset_${testIndex}`;
             const beneficiary = accounts[3];
             const pricePerSecond = monthlySubscriptionPlanPricePerSecond(electricPriceUSD);
             //const pricePerSecond = 1;
             const currency = Currency.DATA;
             const minimumSubscriptionSeconds = 1;
-            await streamingElectricityMarketplace.createProduct(productId, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds, { from: accounts[0] })
+            await streamingElectricityMarketplace.createElectricityAsProduct(productId, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds, { from: accounts[0] })
         })
 
-        it("buyProduct (Buy a subscription plan of 100kw/month)", async () => {
-            /// [Note]: This value from saved-amount of the Product struct (in the Marketplace.sol) when createProduct() above was executed
+        it("buyElectricityAsProduct (Buy a subscription plan of 100kw/month)", async () => {
+            /// [Note]: This value from saved-amount of the Product struct (in the Marketplace.sol) when createElectricityAsProduct() above was executed
             /// [Note]: This assume that a user buy a subscription plan of 100kw/month
             const pricePerSecond = monthlySubscriptionPlanPricePerSecond(electricPriceUSD);            
             const subscriptionSeconds = 2592000; /// [Note]: 1 month == 2592000 seconds
             let purchaseAmount = monthlySubscriptionPlan(pricePerSecond, subscriptionSeconds);
 
             await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, purchaseAmount, { from: accounts[1] })
-            await streamingElectricityMarketplace.buyProduct(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
+            await streamingElectricityMarketplace.buyElectricityAsProduct(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
         })
 
         // it("grant fails for non-owner", async () => {
-        //     await assertFails(streamingElectricityMarketplace.grantSubscription(productId, 100, accounts[5], { from: accounts[5] }))
+        //     await assertFails(streamingElectricityMarketplace.grantElectricitySubscription(productId, 100, accounts[5], { from: accounts[5] }))
         // })
 
         it("grant works for owner", async () => {
             async function testGrant(_productId) {
-                const subBefore = await streamingElectricityMarketplace.getSubscriptionTo(_productId, { from: accounts[5] })
+                const subBefore = await streamingElectricityMarketplace.getElectricitySubscriptionTo(_productId, { from: accounts[5] })
 
-                /// [Note]: grantSubscription() method can be called by product owner
-                streamingElectricityMarketplace.grantSubscription(_productId, 100, accounts[5], { from: accounts[0] })
+                /// [Note]: grantElectricitySubscription() method can be called by product owner
+                streamingElectricityMarketplace.grantElectricitySubscription(_productId, 100, accounts[5], { from: accounts[0] })
                 
-                const subAfter = await streamingElectricityMarketplace.getSubscriptionTo(_productId, { from: accounts[5] })
+                const subAfter = await streamingElectricityMarketplace.getElectricitySubscriptionTo(_productId, { from: accounts[5] })
                 assert(subAfter.isValid)
 
                 /// [Note]: "100" below means "100 seconds" which is defined as the subscription period
@@ -200,13 +200,13 @@ contract("StreamingElectricityMarketplace", function(accounts) {
             let purchaseAmount = monthlySubscriptionPlan(pricePerSecond, subscriptionSeconds);
 
             async function testExtension(_productId) {
-                const subBefore = await streamingElectricityMarketplace.getSubscriptionTo(_productId, { from: accounts[1] })
+                const subBefore = await streamingElectricityMarketplace.getElectricitySubscriptionTo(_productId, { from: accounts[1] })
                 assert(subBefore.isValid)
 
                 await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, purchaseAmount, { from: accounts[1] })
-                await streamingElectricityMarketplace.buyProduct(_productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
+                await streamingElectricityMarketplace.buyElectricityAsProduct(_productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
 
-                const subAfter = await streamingElectricityMarketplace.getSubscriptionTo(_productId, { from: accounts[1] })
+                const subAfter = await streamingElectricityMarketplace.getElectricitySubscriptionTo(_productId, { from: accounts[1] })
                 assert(subAfter.isValid)
 
                 /// [Note]: "100" below means "100 seconds" which is defined as the subscription period
