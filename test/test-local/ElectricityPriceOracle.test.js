@@ -66,9 +66,9 @@ contract("ElectricityPriceOracle", function(accounts) {
                 }
             } = await waitForEvent(events.NewPrice);
 
-            /// [Note]: The average price of electricity in the world 
+            /// [Note]: The average price of electricity in the world for households
             energyPrice = price;
-            console.log('\n=== energyPrice ===', parseFloat(energyPrice));  /// [Result]: 0.13 (USD per kWh for households)
+            console.log('\n=== energyPrice ===', parseFloat(energyPrice));  /// [Result]: 0.13 (USD per kWh)
 
             //energyPrice = price * 100;
             //console.log('\n=== energyPrice ===', parseInt(energyPrice));  /// [Result]: 13
@@ -165,9 +165,9 @@ contract("ElectricityPriceOracle", function(accounts) {
             } = await waitForEvent(events.NewPrice);
 
 
-            /// [Note]: The average price of electricity in the world 
+            /// [Note]: The average price of electricity in the world for households
             const electricPriceUSD = price;
-            console.log('\n=== electricPriceUSD ===', parseFloat(price));  /// [Result]: 0.13 (USD per kWh for households)
+            console.log('\n=== electricPriceUSD ===', parseFloat(price));  /// [Result]: 0.13 (USD per kWh)
 
             //const electricPriceUSD = price * 100;
             //console.log('\n=== electricPriceUSD ===', electricPriceUSD);  /// [Result]: 13 
