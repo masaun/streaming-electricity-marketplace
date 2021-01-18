@@ -68,7 +68,7 @@ contract("ElectricityPriceOracle", function(accounts) {
 
             /// [Note]: The average price of electricity in the world for households
             energyPrice = price;
-            console.log('\n=== energyPrice ===', parseFloat(energyPrice));  /// [Result]: 0.13 (USD per kWh)
+            console.log('\n=== energyPrice (USD per kWh) ===', parseFloat(energyPrice));  /// [Result]: 0.13 (USD per kWh)
 
             //energyPrice = price * 100;
             //console.log('\n=== energyPrice ===', parseInt(energyPrice));  /// [Result]: 13
@@ -89,10 +89,10 @@ contract("ElectricityPriceOracle", function(accounts) {
                 .electricPriceUSD()  /// [Note]: "electricPriceUSD" is the global variable defined in the ElectricityPriceOracle.sol
                 .call()
 
-            console.log('\n=== queriedPrice ===', parseInt(queriedPrice)); /// [Result]: 13
+            console.log('\n=== queriedPrice (USD per kWh) ===', parseInt(queriedPrice)); /// [Result]: 13
 
             const _queriedPrice = parseFloat(queriedPrice / 100);          /// [Result]: 0.13
-            console.log('\n=== _queriedPrice ===', _queriedPrice);
+            console.log('\n=== _queriedPrice (USD per kWh) ===', _queriedPrice);
 
             assert.strictEqual(
                 parseFloat(energyPrice),
@@ -167,7 +167,7 @@ contract("ElectricityPriceOracle", function(accounts) {
 
             /// [Note]: The average price of electricity in the world for households
             const electricPriceUSD = price;
-            console.log('\n=== electricPriceUSD ===', parseFloat(price));  /// [Result]: 0.13 (USD per kWh)
+            console.log('\n=== electricPriceUSD (USD per kWh) ===', parseFloat(price));  /// [Result]: 0.13 (USD per kWh)
 
             //const electricPriceUSD = price * 100;
             //console.log('\n=== electricPriceUSD ===', electricPriceUSD);  /// [Result]: 13 
