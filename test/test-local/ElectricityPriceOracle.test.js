@@ -31,23 +31,8 @@ contract("ElectricityPriceOracle", function(accounts) {
         });
     });
 
-    describe("Listening events", () => {
-        // it('Should get contract instantiation for listening to events', async () => {
-        //     /// Using deployed contract
-        //     const { contract } = await electricityPriceOracle;
-
-        //     /// Using websocket
-        //     const { methods, events } = new web3.eth.Contract(
-        //         contract._jsonInterface,
-        //         contract._address
-        //     )
-
-        //     /// [Log]
-        //     console.log('\n=== events ===', events);
-
-        // })
-
-        it('Callback should have logged a new Energy Price', async () => {
+    describe("Listening events and retrieve a current Energy Price", () => {
+        it('Should get contract instantiation for listening to events', async () => {
             /// Using deployed contract
             const { contract } = await electricityPriceOracle;
 
@@ -60,6 +45,18 @@ contract("ElectricityPriceOracle", function(accounts) {
             /// [Log]
             console.log('\n=== events ===', events);
 
+        })
+
+        it('Callback should have logged a new Energy Price', async () => {
+            /// Using deployed contract
+            const { contract } = await electricityPriceOracle;
+
+            /// Using websocket
+            const { methods, events } = new web3.eth.Contract(
+                contract._jsonInterface,
+                contract._address
+            )
+
             /// Retrieve the returned value of NewPrice Event
             const {
                 returnValues: {  /// [Note]: "what", "price", "id" are parameters of the NewPrice Event in ElectricityPriceOracle.sol
@@ -70,7 +67,7 @@ contract("ElectricityPriceOracle", function(accounts) {
             } = await waitForEvent(events.NewPrice);
 
             energyPrice = price * 100;
-            console.log('\n=== energyPrice ===', parseInt(energyPrice));  /// [Result]: 13
+            console.log('\n=== energyPrice ===', parseInt(energyPrice));  /// [Result]: 13 (the average price of electricity in the world)
         })
 
         it('Should set Energy Price correctly in contract', async () => {
@@ -99,39 +96,23 @@ contract("ElectricityPriceOracle", function(accounts) {
     });
 
     describe("Retrieve an electricity price", () => {
-        // check that it sends a query and receives a response
+        /// check that it sends a query and receives a response
         it('sends an electricity price query and receives a response', async function () {
 
-            // set this test to timeout after 1 minute
+            /// set this test to timeout after 1 minute
             this.timeout(60 * 1000)
 
-            // call the getRandomNumber function
-            // make sure to send enough Ether and to set gas limit sufficiently high
+            /// call the getRandomNumber function
+            /// make sure to send enough Ether and to set gas limit sufficiently high
             const result = await electricityPriceOracle.updateElectric({
                 from: accounts[0],
                 value: web3.utils.toWei('1', 'ether'),
                 gas: '5000000',
             })
-            console.log('\n=== result ===', result);
 
-
-            ///------------------------------------------------------------
-            /// [Test]: By using waitForEvent() from the Provable-Things
-            ///------------------------------------------------------------
-            const {
-                returnValues: {
-                    _newEnergyPrice
-                }
-            } = await waitForEvent(contractEvents.NewPrice)
-            newEnergyPriceFromContractEvent = _newEnergyPrice
-            console.log('\n=== newEnergyPriceFromContractEvent ===', newEnergyPriceFromContractEvent);
-
-
-
-
-
-
-            // Method 1 to check for events: loop through the "result" variable
+            ///-------------------------------------------------------------------
+            /// Method 1 to check for events: loop through the "result" variable
+            ///-------------------------------------------------------------------
 
             // look for the NewOraclizeQuery event to make sure query sent
             let testPassed = false // variable to hold status of result
@@ -144,58 +125,35 @@ contract("ElectricityPriceOracle", function(accounts) {
             assert(testPassed, '"NewOraclizeQuery" event not found')
 
 
-            ///---------------------------
-            /// [Test]: web3.js v1.0.0
-            ///---------------------------
-            electricityPriceOracle.events.NewPrice({
-                fromBlock: 'latest',
-                toBlock: 'latest'
-            }, function(error, result) {
-                if (!error) {
-                    console.log('\n=== result ([Test]: web3.js v1.0.0) ===', result);
-                } else {
-                    console.log('\n=== error ([Test]: web3.js v1.0.0) ===', error);
+            ///------------------------------------------------
+            /// Method 2 to check for events: listen for them
+            ///------------------------------------------------
+
+            /// listen for LogResultReceived event to check for Oraclize's call to _callback
+            /// define events we want to listen for
+            
+            /// Using deployed contract
+            const { contract } = await electricityPriceOracle;
+
+            /// Using websocket
+            const { methods, events } = new web3.eth.Contract(
+                contract._jsonInterface,
+                contract._address
+            )
+
+            /// Retrieve the returned value of NewPrice Event
+            const {
+                returnValues: {  /// [Note]: "what", "price", "id" are parameters of the NewPrice Event in ElectricityPriceOracle.sol
+                    what, 
+                    price, 
+                    id
                 }
-            });
+            } = await waitForEvent(events.NewPrice);
 
+            const electricPriceUSD = price * 100;
+            console.log('\n=== electricPriceUSD ===', electricPriceUSD);  /// [Result]: 13 
 
-            ///---------------------------
-            /// Original Code 
-            ///---------------------------
-
-            // Method 2 to check for events: listen for them with .watch()
-
-            // listen for LogResultReceived event to check for Oraclize's call to _callback
-            // define events we want to listen for
-            const NewPrice = electricityPriceOracle.events.NewPrice()  /// [Note]: web3.js v1.0.0
-            //const NewPrice = electricityPriceOracle.NewPrice()       /// [Note]: web3.js v0.2.0
-
-            // create promise so Mocha waits for value to be returned
-            let checkForNumber = new Promise((resolve, reject) => {
-                // watch for our LogResultReceived event
-                electricityPriceOracle.events.NewPrice(async function(error, result) {  /// [Note]: web3.js v1.0.0
-                //NewPrice.watch(async function (error, result) {                       /// [Note]: web3.js v0.2.0
-                    if (error) {
-                      reject(error)
-                    }
-
-                    // template.randomNumber() returns a BigNumber object
-                    const bigNumber = await electricityPriceOracle.electricPriceUSD.call()
-
-                    // convert BigNumber to ordinary number
-                    const electricPriceUSD = bigNumber.toNumber()
-                    
-                    // stop watching event and resolve promise
-                    //NewPrice.stopWatching()
-                    resolve(electricPriceUSD)
-                }) // end LogResultReceived.watch()
-            }) // end new Promise
-
-            // call promise and wait for result
-            const electricPriceUSD = await checkForNumber
-            console.log('\n=== electricPriceUSD ===', electricPriceUSD);
-
-            // ensure result is within our query's min/max values
+            /// ensure result is within our query's min/max values
             assert.notEqual(electricPriceUSD, 0, 'Electricity price was zero.')
         });
     });
