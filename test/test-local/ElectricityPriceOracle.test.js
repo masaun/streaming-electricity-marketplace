@@ -16,10 +16,6 @@ contract("ElectricityPriceOracle", function(accounts) {
     /// Global ElectricityPriceOracle contract instance
     let electricityPriceOracle;
 
-    /// Global variable for testing of listening events
-    let energyPrice;
-    let queriedPrice;
-
     describe("Setup smart-contracts", () => {
         it("Check all accounts", async () => {
             console.log('=== accounts ===\n', accounts);
@@ -32,6 +28,10 @@ contract("ElectricityPriceOracle", function(accounts) {
     });
 
     describe("Listening events and retrieve a current Energy Price", () => {
+        /// Global variable for testing of listening events
+        let energyPrice;
+        let queriedPrice;
+
         it('Should get contract instantiation for listening to events', async () => {
             /// Using deployed contract
             const { contract } = await electricityPriceOracle;
@@ -66,8 +66,12 @@ contract("ElectricityPriceOracle", function(accounts) {
                 }
             } = await waitForEvent(events.NewPrice);
 
-            energyPrice = price * 100;
-            console.log('\n=== energyPrice ===', parseInt(energyPrice));  /// [Result]: 13 (the average price of electricity in the world)
+            /// [Note]: The average price of electricity in the world 
+            energyPrice = price;
+            console.log('\n=== energyPrice ===', parseFloat(energyPrice));  /// [Result]: 0.13 (USD per kWh for households)
+
+            //energyPrice = price * 100;
+            //console.log('\n=== energyPrice ===', parseInt(energyPrice));  /// [Result]: 13
         })
 
         it('Should set Energy Price correctly in contract', async () => {
@@ -87,11 +91,20 @@ contract("ElectricityPriceOracle", function(accounts) {
 
             console.log('\n=== queriedPrice ===', parseInt(queriedPrice)); /// [Result]: 13
 
+            const _queriedPrice = parseFloat(queriedPrice / 100);            /// [Result]: 0.13
+            console.log('\n=== _queriedPrice ===', _queriedPrice);
+
             assert.strictEqual(
-                parseInt(energyPrice),
-                parseInt(queriedPrice),
+                parseFloat(energyPrice),
+                _queriedPrice,
                 'Contract\'s Energy Price not set correctly!'
             )
+
+            // assert.strictEqual(
+            //     parseInt(energyPrice),
+            //     parseInt(_queriedPrice),
+            //     'Contract\'s Energy Price not set correctly!'
+            // )
         })
     });
 
@@ -150,8 +163,13 @@ contract("ElectricityPriceOracle", function(accounts) {
                 }
             } = await waitForEvent(events.NewPrice);
 
-            const electricPriceUSD = price * 100;
-            console.log('\n=== electricPriceUSD ===', electricPriceUSD);  /// [Result]: 13 
+
+            /// [Note]: The average price of electricity in the world 
+            const electricPriceUSD = price;
+            console.log('\n=== electricPriceUSD ===', parseFloat(price));  /// [Result]: 0.13 (USD per kWh for households)
+
+            //const electricPriceUSD = price * 100;
+            //console.log('\n=== electricPriceUSD ===', electricPriceUSD);  /// [Result]: 13 
 
             /// ensure result is within our query's min/max values
             assert.notEqual(electricPriceUSD, 0, 'Electricity price was zero.')
