@@ -22,7 +22,7 @@ contract("ElectricityPriceOracle", function(accounts) {
         });        
 
         it("Setup the ElectricityPriceOracle contract instance", async () => {
-            /// [Note]: Transfer 1 ETH
+            /// [Note]: Transfer 1 ETH for executing the updateElectric() method in the constructor
             electricityPriceOracle = await ElectricityPriceOracle.new({ from: accounts[0], value: web3.utils.toWei("1", "ether") });
         });
     });

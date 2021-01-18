@@ -2,18 +2,15 @@
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
+/// Helper for getting Events of Provable-Things
+const { waitForEvent } = require('../utils/provable-things/getEventsHelper.js');
+
 /// Artifact of the StreamingElectricityMarketplace contract 
 const StreamingElectricityMarketplace = artifacts.require("StreamingElectricityMarketplace");
 const ElectricityPriceOracle = artifacts.require("ElectricityPriceOracle");
 const Marketplace = artifacts.require("Marketplace");
 const Marketplace_prev = artifacts.require("Marketplace20180425")
 const DataCoin = artifacts.require("DataCoin");
-
-/// Global variable
-let streamingElectricityMarketplace;
-let electricityPriceOracle;
-let marketplace;
-let dataCoin;
 
 /// Deployed address (from mainnent): https://github.com/streamr-dev/marketplace-contracts/blob/master/migrations/2_deploy_contracts.js#L6-L10
 let STREAMING_ELECTRICITY_MARKETPLACE;
@@ -33,6 +30,14 @@ const { assertReturnValueEqual, assertEvent, assertEqual, assertFails, assertEve
  * @dev - Execution COMMAND: $ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js
  **/
 contract("StreamingElectricityMarketplace", function(accounts) {
+    /// Global variable for contract instances
+    let streamingElectricityMarketplace;
+    let electricityPriceOracle;
+    let marketplace;
+    let dataCoin;
+
+    /// Globalc variable for oracle
+    let electricPriceUSD;
 
     /// @dev - Use testIndex in order to avoid duplicated-productId
     this.testIndex = 0;
@@ -43,7 +48,8 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         });        
 
         it("Setup ElectricityPriceOracle contract instance", async () => {
-            electricityPriceOracle = await ElectricityPriceOracle.new({ from: accounts[0] });
+            /// [Note]: Transfer 1 ETH for executing the updateElectric() method in the constructor
+            electricityPriceOracle = await ElectricityPriceOracle.new({ from: accounts[0], value: web3.utils.toWei("1", "ether") });
         });        
 
         it("Setup DataCoin contract instance", async () => {
@@ -87,6 +93,40 @@ contract("StreamingElectricityMarketplace", function(accounts) {
 
             const dataCoinBalance = await dataCoin.balanceOf(accounts[1], { from: accounts[1] });
             console.log('=== DataCoin balance of buyer (accounts[1]) ===', String(dataCoinBalance));
+        });
+    });
+
+    describe("Retrieve current energy price via oracle", () => {
+        it('sends an electricity price query and receives a response', async function () {
+            /// set this test to timeout after 1 minute
+            this.timeout(60 * 1000)
+
+            /// Step1: Execute the updateElectric() method in ElectricityPriceOracle.sol
+            const result = await electricityPriceOracle.updateElectric({
+                from: accounts[0],
+                value: web3.utils.toWei('1', 'ether'),
+                gas: '5000000',
+            })
+
+            /// Step2: Listen for NewPrice event to check for Oraclize's call to _callback
+            const { contract } = await electricityPriceOracle;
+
+            const { methods, events } = new web3.eth.Contract(
+                contract._jsonInterface,
+                contract._address
+            );
+
+            const {              /// Retrieve the returned value of NewPrice Event
+                returnValues: {  /// [Note]: "what", "price", "id" are parameters of the NewPrice Event in ElectricityPriceOracle.sol
+                    what, 
+                    price, 
+                    id
+                }
+            } = await waitForEvent(events.NewPrice);
+
+            /// [Note]: The average price of electricity in the world for households
+            electricPriceUSD = price;
+            console.log('\n=== electricPriceUSD (USD per kWh) ===', parseFloat(price));  /// [Result]: 0.13 (USD per kWh)
         });
     });
 
