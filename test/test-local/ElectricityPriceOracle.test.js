@@ -91,7 +91,7 @@ contract("ElectricityPriceOracle", function(accounts) {
 
             console.log('\n=== queriedPrice ===', parseInt(queriedPrice)); /// [Result]: 13
 
-            const _queriedPrice = parseFloat(queriedPrice / 100);            /// [Result]: 0.13
+            const _queriedPrice = parseFloat(queriedPrice / 100);          /// [Result]: 0.13
             console.log('\n=== _queriedPrice ===', _queriedPrice);
 
             assert.strictEqual(
@@ -115,7 +115,10 @@ contract("ElectricityPriceOracle", function(accounts) {
             /// set this test to timeout after 1 minute
             this.timeout(60 * 1000)
 
-            /// call the getRandomNumber function
+            ///-------------------------------------------------------------------
+            /// Step1: Execute the updateElectric() method in ElectricityPriceOracle.sol
+            ///-------------------------------------------------------------------
+            /// call the getRandomNumber function (from the Provable-Things oracle)
             /// make sure to send enough Ether and to set gas limit sufficiently high
             const result = await electricityPriceOracle.updateElectric({
                 from: accounts[0],
@@ -124,9 +127,8 @@ contract("ElectricityPriceOracle", function(accounts) {
             })
 
             ///-------------------------------------------------------------------
-            /// Method 1 to check for events: loop through the "result" variable
+            /// Step2: Check for events: loop through the "result" variable
             ///-------------------------------------------------------------------
-
             // look for the NewOraclizeQuery event to make sure query sent
             let testPassed = false // variable to hold status of result
             for (let i = 0; i < result.logs.length; i++) {
@@ -139,9 +141,8 @@ contract("ElectricityPriceOracle", function(accounts) {
 
 
             ///------------------------------------------------
-            /// Method 2 to check for events: listen for them
+            /// Step3: Check for events: listen for them
             ///------------------------------------------------
-
             /// listen for LogResultReceived event to check for Oraclize's call to _callback
             /// define events we want to listen for
             
