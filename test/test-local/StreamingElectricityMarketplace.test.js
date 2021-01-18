@@ -131,6 +131,18 @@ contract("StreamingElectricityMarketplace", function(accounts) {
     });
 
     describe("Subscription", () => {
+        /// Monthly plan purchased is the plan of 100kw/month
+        function monthlySubscriptionPlanPricePerSecond(unitEnergyPrice) {
+            const kwPerMonth = 100;  /// 100kw/month
+            const _purchaseMonthlyPlanPerSecond = unitEnergyPrice * kwPerMonth;
+            return _purchaseMonthlyPlanPerSecond;
+        }
+
+        function monthlySubscriptionPlan(pricePerSecond, subscriptionSeconds) {
+            month = 2592000; /// [Note]: 1 month == 2592000 seconds
+            return pricePerSecond * subscriptionSeconds;
+        }
+
         const testToleranceSeconds = 5
         this.testIndex += 1
 
@@ -141,17 +153,20 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         it("createProduct", async () => {
             const name = `Energy_Asset_${testIndex}`;
             const beneficiary = accounts[3];
-            const pricePerSecond = 1;
+            const pricePerSecond = monthlySubscriptionPlanPricePerSecond(electricPriceUSD);
+            //const pricePerSecond = 1;
             const currency = Currency.DATA;
             const minimumSubscriptionSeconds = 1;
             await streamingElectricityMarketplace.createProduct(productId, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds, { from: accounts[0] })
         })
 
-        it("buyProduct", async () => {
-            const pricePerSecond = 1;  /// [Note]: This value from saved-amount of the Product struct (in the Marketplace.sol) when createProduct() above was executed
-            const subscriptionSeconds = 100;
-            let purchaseAmount = pricePerSecond * subscriptionSeconds;
-            //let purchaseAmount = web3.utils.toWei(`${ pricePerSecond * subscriptionSeconds }`, 'ether');
+        it("buyProduct (Buy a subscription plan of 100kw/month)", async () => {
+            /// [Note]: This value from saved-amount of the Product struct (in the Marketplace.sol) when createProduct() above was executed
+            /// [Note]: This assume that a user buy a subscription plan of 100kw/month
+            const pricePerSecond = monthlySubscriptionPlanPricePerSecond(electricPriceUSD);            
+            const subscriptionSeconds = 2592000; /// [Note]: 1 month == 2592000 seconds
+            let purchaseAmount = monthlySubscriptionPlan(pricePerSecond, subscriptionSeconds);
+
             await dataCoin.approve(STREAMING_ELECTRICITY_MARKETPLACE, purchaseAmount, { from: accounts[1] })
             await streamingElectricityMarketplace.buyProduct(productId, subscriptionSeconds, purchaseAmount, { from: accounts[1] })
         })
@@ -178,9 +193,11 @@ contract("StreamingElectricityMarketplace", function(accounts) {
         })
 
         it("subscription can be extended (In case that subscrioption period is expired, an user pay subscrioption fees again in order to extend subscrioption period)", async () => {
-            const pricePerSecond = 1;  /// [Note]: This value from saved-amount of the Product struct (in the Marketplace.sol) when createProduct() above was executed
-            const subscriptionSeconds = 100;
-            let purchaseAmount = pricePerSecond * subscriptionSeconds;
+            /// [Note]: This value from saved-amount of the Product struct (in the Marketplace.sol) when createProduct() above was executed
+            /// [Note]: This assume that a user buy 100kw/month
+            const pricePerSecond = monthlySubscriptionPlanPricePerSecond(electricPriceUSD);            
+            const subscriptionSeconds = 2592000; /// [Note]: 1 month == 2592000 seconds
+            let purchaseAmount = monthlySubscriptionPlan(pricePerSecond, subscriptionSeconds);
 
             async function testExtension(_productId) {
                 const subBefore = await streamingElectricityMarketplace.getSubscriptionTo(_productId, { from: accounts[1] })
