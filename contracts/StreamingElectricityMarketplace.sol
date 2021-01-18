@@ -48,15 +48,15 @@ contract StreamingElectricityMarketplace {
      * @notice - Launch electricity-based product 
      * @dev - ProductId = 1:Solar Power, 2:Hydro Power, etc...
      */
-    function createProduct(bytes32 id, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
+    function createElectricityAsProduct(bytes32 productId, string memory name, address beneficiary, uint pricePerSecond, Marketplace.Currency currency, uint minimumSubscriptionSeconds) public returns (bool) {
         //dataCoin.approve(MARKETPLACE, 1000);
-        marketplace.createProduct(id, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
+        marketplace.createProduct(productId, name, beneficiary, pricePerSecond, currency, minimumSubscriptionSeconds);
     }
 
     /**
      * @notice - Buy and start a subscription payment for electricity
      */
-    function buyProduct(bytes32 productId, uint subscriptionSeconds, uint purchaseAmount) public returns (bool) {
+    function buyElectricityAsProduct(bytes32 productId, uint subscriptionSeconds, uint purchaseAmount) public returns (bool) {
         /// [Note]: Should approve the DataCoins in advance
         dataCoin.transferFrom(msg.sender, address(this), purchaseAmount);
 
@@ -68,9 +68,9 @@ contract StreamingElectricityMarketplace {
     }
 
     /**
-     * @notice - Grant subscription
+     * @notice - Grant electricity subscription
      */
-    function grantSubscription(bytes32 productId, uint subscriptionSeconds, address recipient) public returns (bool) {
+    function grantElectricitySubscription(bytes32 productId, uint subscriptionSeconds, address recipient) public returns (bool) {
         marketplace.grantSubscription(productId, subscriptionSeconds, recipient);
     }
     
@@ -83,7 +83,7 @@ contract StreamingElectricityMarketplace {
     /**
      * @notice - this method is in order to get end-timestamp of subscription of caller (msg.sender)
      */
-    function getSubscriptionTo(bytes32 productId) public view returns (bool isValid, uint endTimestamp) {
+    function getElectricitySubscriptionTo(bytes32 productId) public view returns (bool isValid, uint endTimestamp) {
         return marketplace.getSubscriptionTo(productId);
     }
 

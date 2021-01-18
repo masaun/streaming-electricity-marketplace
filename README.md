@@ -3,18 +3,20 @@
 ***
 ## 【Introduction of the Streaming Electricity Marketplace】
 - This is a smart contract that allow a buyer to be able to buy electricity with subscription (streaming) plan.
-- Streamr and Provable Things are used for implementing this smart contract.
+- Libraries and smart contracts of below are used for implementing this smart contract.
+  - Streamr (for subscription) 
+  - Provable Things (for oracle of electricity price)
 
 &nbsp;
 
 ***
 
 ## 【Workflow】
-- ① A producer create the energy product.   
+- ① A producer create the electricity as a product.   
   At that time,   
-  - an energy product ID is published.  
+  - a product ID for the electricity is published.  
   - Subscription fees and subscription period are defined by a producer.  
-- ② A buyer buy the energy product which they prefer by paying for subscription fees.   
+- ② A buyer buy the electricity as a product which they prefer by paying for subscription fees.   
 - ③ Once subscription period is expired, a buyer can extend subscription period by paying for subscription fees again.  
 
 
@@ -75,13 +77,13 @@ $ node bridge -H localhost:8545 -a 1
 <br>
 
 - 3: Execute test of the smart-contracts (on the local)
-  - Test for the StreamingElectricityMarketplace contracts
-    `$ npm run test:streaming`  
-    ($ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js)
-  
   - Test for the ElectricityPriceOracle contract
     `$ npm run test:oracle`
     (truffle test ./test/test-local/ElectricityPriceOracle.test.js)
+
+  - Test for the StreamingElectricityMarketplace contracts
+    `$ npm run test:streaming`  
+    ($ truffle test ./test/test-local/StreamingElectricityMarketplace.test.js)
 
 <br>
 
@@ -98,16 +100,24 @@ $ node bridge -H localhost:8545 -a 1
 
 <br>
 
-- Energy Web Foundation (EWF)
-  - Data for your contracts: Oracles with Oraclize
-    https://energyweb.atlassian.net/wiki/spaces/EWF/pages/558432257/Data+for+your+contracts+Oracles+with+Oraclize
-
-  - `Provable Things` is used as oracle for getting the energy price   
+- Provable Things
     - oraclizeAPI_0.5.sol:   
       https://github.com/provable-things/ethereum-api/blob/master/oraclizeAPI_0.5.sol  
 
     - ethereum-bridge:  
       https://github.com/provable-things/ethereum-bridge  
+
+    - Testing Provable's Diesel Prices Example  
+      - DieselPrice.sol  
+        https://github.com/provable-things/ethereum-examples/blob/master/solidity/truffle-examples/diesel-price/contracts/DieselPrice.sol
+      - Test（diesel-price-test.js）  
+        https://github.com/provable-things/ethereum-examples/blob/master/solidity/truffle-examples/diesel-price/test/diesel-price-test.js  
+
+<br>
+
+- Energy Web Foundation (EWF)
+  - Data for your contracts: Oracles with Oraclize
+    https://energyweb.atlassian.net/wiki/spaces/EWF/pages/558432257/Data+for+your+contracts+Oracles+with+Oraclize
 
     - Method for getting the Electric Price：
       - FuelPrice.sol: https://github.com/ngyam/tutorial-oraclize/blob/master/contracts/FuelPrice.sol 
