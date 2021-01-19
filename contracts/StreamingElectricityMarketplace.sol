@@ -17,14 +17,6 @@ import { DataCoin } from "./DataCoin.sol";
  */
 contract StreamingElectricityMarketplace {
 
-    struct Device {  /// [Key]: Array index is currentDeviceId - 1
-        address ownerAddress;
-        address deviceAddress;
-        uint sellPrice;  /// [Note]: Threshold of price for selling
-        uint buyPrice;   /// [Note]: Threshold of price for buying 
-    }
-    Device[] devices;
-
     ElectricityPriceOracle public electricityPriceOracle;
     Marketplace public marketplace;
     DataCoin public dataCoin;
